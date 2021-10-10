@@ -1,16 +1,16 @@
-import java.util.*;
+
 public class Vaccine {
     
     private final String VaccineName;
     private int doses;
     private final int gap;
 
-    private Scanner sc = new Scanner(System.in);
+    
     Vaccine(String VaccineName , int doses , int gap){
         
-        this.VaccineName = sc.next();
-        this.doses = sc.nextInt();
-        this.gap=sc.nextInt();
+        this.VaccineName = VaccineName;
+        this.doses = doses;
+        this.gap=gap;
         this.print();     
 
     }
