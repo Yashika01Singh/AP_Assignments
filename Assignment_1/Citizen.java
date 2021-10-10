@@ -85,5 +85,21 @@ public class Citizen {
         }
         return this.slot.getDay()+this.slot.getvaccinefull().get_Gap();
     }
+    public void print_vac_details(){
+        if(this.status==Status.partially_Vaccinated){
+            System.out.println("PARTIALLY VACCINATED");
+            System.out.printf("Vaccine Given: %s \n" , this.get_VacName());
+            System.out.printf("Number of Doses given: %d\5n" , this.get_bookings());
+            System.out.printf("Next Dose due date: %s\n" ,this.get_DueDate());
+        }
+        if(this.status==Status.fully_Vaccinated){
+            System.out.println("FULLY VACCINATED\n");
+            System.out.printf("Vaccine Given: %s \n" , this.get_VacName());
+            System.out.printf("Number of Doses given: %d\n" , this.get_bookings());
+        }
+        if(this.status == Status.Not_Vaccinated){
+            System.out.println("citizen REGISTERED");
+        }  
+    }
 
 }

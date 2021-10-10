@@ -51,5 +51,21 @@ public class Hospital {
         }
     }
     
-   
+    
+    public void show_all_Slots(){
+        int i=0;
+            
+        ArrayList<Slot>Slots=this.getSlot();
+        for(Slot slot : Slots){
+            System.out.printf("\n%d -> ",i);
+            slot.print_slot();
+            i++;
+            }
+            
+        
+
+    }
+    public void printinfo(){
+        System.out.printf("%s %s \n" , this.getUniqueId() , this.get_Name());
+    }
 }

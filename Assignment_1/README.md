@@ -16,3 +16,4 @@ Portal : THis class keeps an arraylist of :
         Vaccines : all vaccines in the system
         Citizens : all registered citizens
         Hospitals : all registered Hospitals
+        ALL Major inputs are in this class

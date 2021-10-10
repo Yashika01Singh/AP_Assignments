@@ -110,34 +110,6 @@ public class Portal{
         
         this.Citizens.add(citizen);
     }
-    private void print_slot(Slot slot){
-        System.out.printf("Day : %d ",slot.getDay());
-        System.out.printf("Available Qty : %d ",slot.getQuantity()); 
-        System.out.printf("Vaaccine : %s ",slot.getVaccine());
-        System.out.println();
-    
-    }
-    public void show_allSlots(){
-        System.out.println("Enter Hospital ID");
-        Hospital hospital = null;
-        try{
-        hospital =Hospitals.get(sc.nextInt()) ;
-        }catch (Exception e){
-            System.out.println("Enter valid Hospital ID");
-            return;
-        }
-        int i=0;
-            
-            ArrayList<Slot>Slots=hospital.getSlot();
-            for(Slot slot : Slots){
-                System.out.printf("\n%d -> ",i);
-                print_slot(slot);
-                i++;
-                }
-            
-        
-
-    }
     public void BookSlot(){
         System.out.println("Enter patient Unique ID:");
         String id = sc.next();
@@ -156,6 +128,7 @@ public class Portal{
             System.out.println("Citizen Already vaccinated");
             return;
         }
+        //Starting finding slots
         System.out.println("1.Search by area \n2.Search by Vaccine\n3.Exit");
         System.out.println("Enter option");
         int ch = sc.nextInt();
@@ -172,7 +145,7 @@ public class Portal{
             
             for (Hospital hospital : Hospitals){
                 if(pincode==hospital.get_pincode()){
-                    System.out.printf("%s %s \n" , hospital.getUniqueId() , hospital.get_Name());
+                    hospital.printinfo();
                     
                 }
 
@@ -185,15 +158,10 @@ public class Portal{
                     System.out.println("Enter valid Hospital ID");
                     return;
                 }
-            ArrayList<Slot>Slots=SelectedHospital.getSlot();
-            i=0;       
-            for(Slot slot : Slots){
 
-            System.out.printf("%d -> " , i);
-            print_slot(slot);
-            i++;
-
-            }
+            SelectedHospital.show_all_Slots();
+            ArrayList<Slot>Slots=SelectedHospital.getSlot();    
+            
             System.out.println("Choose Slot \n");
             try{
                 SelectedSlot = Slots.get(sc.nextInt());
@@ -216,8 +184,7 @@ public class Portal{
                 
                 for(Slot slot : Slots){
                 if((slot.getVaccine()).equalsIgnoreCase(vac)){
-                    System.out.printf("%s %s \n" , hospital.getUniqueId() , hospital.get_Name());                
-                    
+                    hospital.printinfo();                    
                     
                 }
                    
@@ -236,7 +203,7 @@ public class Portal{
              for(Slot slot : Slots){
                 if((slot.getVaccine()).equalsIgnoreCase(vac) && citizen.get_DueDate()<=slot.getDay()){
                     System.out.printf("%d ->" , i);
-                    print_slot(slot);
+                    slot.print_slot();
                     i++;
                     SuitableSlots.add(slot);
                 }
@@ -256,7 +223,8 @@ public class Portal{
                     }
                
         }
-        else{        
+        else{  
+            System.out.println();    
             return;
         }
         
@@ -272,7 +240,18 @@ public class Portal{
 
 
     }
+    public void show_allSlots(){
+        Hospital hospital = null;
+        System.out.println("\nEnter Hospital ID:");
+        try{
+            hospital  =Hospitals.get(sc.nextInt()) ;
+            }catch (Exception e){
+            System.out.println("Enter valid Hospital ID");
+            return;
+            }
+        hospital.show_all_Slots();
 
+    }
     public void VacStatus(){
         System.out.println("Enter patient Unique ID:");
         String id = sc.next();
@@ -286,21 +265,8 @@ public class Portal{
             System.out.println("Invalid ID");
             return;    
         }
-        Status status = citizen.getStatus();
-        if(status==Status.partially_Vaccinated){
-            System.out.println("PARTIALLY VACCINATED");
-            System.out.printf("Vaccine Given: %s \n" , citizen.get_VacName());
-            System.out.printf("Number of Doses given: %d\5n" , citizen.get_bookings());
-            System.out.printf("Next Dose due date: %s\n" ,citizen.get_DueDate());
-        }
-        if(status==Status.fully_Vaccinated){
-            System.out.println("FULLY VACCINATED\n");
-            System.out.printf("Vaccine Given: %s \n" , citizen.get_VacName());
-            System.out.printf("Number of Doses given: %d\n" , citizen.get_bookings());
-        }
-        if(status == Status.Not_Vaccinated){
-            System.out.println("citizen REGISTERED");
-        }
+        citizen.print_vac_details();
+       
 
     }
   

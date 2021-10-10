@@ -43,4 +43,10 @@ public class Slot {
     public Vaccine getvaccinefull(){
         return this.vaccine;
     }
+    public void print_slot(){
+        System.out.printf("Day : %d ",this.getDay());
+        System.out.printf("Available Qty : %d ",this.getQuantity()); 
+        System.out.printf("Vaaccine : %s ",this.getVaccine());
+        System.out.println();
+    }
 }
