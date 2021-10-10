@@ -1,5 +1,6 @@
 import java.util.*;
 public class APP {
+    //this class exucutes the main function /menu for the app
     public static void main(String[] args){
         Scanner sc = new Scanner(System.in);
         Portal portal = new Portal();

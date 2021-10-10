@@ -1,7 +1,7 @@
 
 enum Status { Not_Vaccinated , partially_Vaccinated ,fully_Vaccinated} 
 public class Citizen {
-    
+    //This class creates a object citizen
     private final int age;
     private final String name;
     private final String ID;;

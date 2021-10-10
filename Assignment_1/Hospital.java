@@ -35,15 +35,19 @@ public class Hospital {
         return this.HospitalName;
     }
     public void Remove_Slot(Slot Selectedslot){
-        for(Slot slot : Slots){
+        int i=0;
+        for(Slot slot : this.Slots){
             if(slot==Selectedslot){
                 int quantity = slot.getQuantity();
-                if(quantity==1){
-                    Slots.remove(slot);
+                if(quantity<=1){
+                
+                    this.Slots.remove(i);
+                    return;
                 }
                 slot.set_quantity(quantity-1);
 
             }
+            i++;
         }
     }
     
