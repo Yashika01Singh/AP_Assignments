@@ -21,6 +21,12 @@ public class Course {
             i++;
         }
     } 
+    public void add_Instructor(){
+        Instructors.add(new Instructor());
+    }
+    public void add_Student(){
+        Students.add(new Student());
+    }
     public Instructor get_Instructor(int id){
         return Instructors.get(id);
     }
@@ -33,7 +39,7 @@ public class Course {
     public boolean Execute(Instructor instructor , int op){
 
         if(op==1){
-           Add_Class_Material();
+           Add_Class_Material(instructor);
         }
         if(op==2){
             Add_Assessment();
@@ -45,7 +51,7 @@ public class Course {
             View_Assessment();
         }
         if(op==5){
-            Grade_Assessment();
+            Grade_Assessment(instructor);
         }
         if(op==6){
             Close_Assessment();
@@ -89,23 +95,42 @@ public class Course {
         }
         return true;
     }
-    private void Add_Class_Material(){
+    private void Add_Class_Material(User user){
         System.out.println("1.Add Lecture Slide");
         System.out.println("2.Add Lecture Video");
-        int ch = sc.nextInt();
+        int ch = Integer.parseInt(sc.nextLine());
         if(ch==1){
-            Lecture_Slide lec = new Lecture_Slide();
+            
+            System.out.println("Enter topic of slides"); 
+            String topic = sc.nextLine();
+            System.out.println("Enter number of slides"); 
+            int num =Integer.parseInt(sc.nextLine());
+            ArrayList<String>slides = new ArrayList<String>();
+            for(int i=0 ; i<num ;i++){
+                System.out.printf("\nContent of slide %d:",i+1);
+                String s =sc.nextLine() ;
+                slides.add(s); 
+            }
+            Lecture_Slide lec = new Lecture_Slide(user,topic,slides);
             this.CourseMaterials.add(lec);            
         } 
         if(ch==2){
-            Lecture_Video lec = new Lecture_Video();
-            this.CourseMaterials.add(lec);
+            System.out.println("Enter topic of video:");
+            String topic=sc.nextLine();       
+            System.out.println("Enter filename of video");
+            String filename=sc.nextLine();
+            if(filename.endsWith(".mp4"))
+            {Lecture_Video lec = new Lecture_Video(user,topic,filename);
+            this.CourseMaterials.add(lec);}
+            else{
+                System.out.println("Enter valid filename with .mp4 extension to upload lecture video");
+            }
         }
     }
     private void Add_Assessment(){
         System.out.println("1.Add Assignment");
         System.out.println("2.Add Quiz");
-        int ch = sc.nextInt();
+        int ch = Integer.parseInt(sc.nextLine());
         if(ch==1){
             Assignment assign = new Assignment();
             this.Assessments.add(assign);            
@@ -120,7 +145,7 @@ public class Course {
         
         for (CourseMaterial material : CourseMaterials){
             material.print();
-            System.out.println();
+            System.out.println("\n\n");
         }
     }
     public void View_Assessment(){
@@ -128,30 +153,42 @@ public class Course {
        int i=0; 
         for (Assessment assm : Assessments){
             System.out.printf("ID: %d " ,i);
-            System.out.printf("%s",assm.print());
-            i=i++;
+            
+            assm.print();
+            i++;
         }
     }
-    public void Grade_Assessment(){
+    public void Grade_Assessment(Instructor instructor){
+        if(Assessments.isEmpty()){
+            System.out.println("No assessments yet");
+            return;
+        }
         View_Assessment();
         //Enter check for no ungraded 
-        System.out.println("Enter ID of assessment to view submissions");
-        Assessment assem = Assessments.get(sc.nextInt());
+        System.out.println("\nEnter ID of assessment to view submissions");
+        Assessment assem = Assessments.get(Integer.parseInt(sc.nextLine()));
         
-        assem.grade();
+        assem.grade(instructor);
     }
     public void Close_Assessment(){
         System.out.println("List of Open Assignments");
-        int i=0; 
+        int i=0;
+        ArrayList<Assessment>OpenAssessments = new ArrayList<Assessment>() ; 
         for (Assessment assm : Assessments){
             if(assm.get_Status() ){
             System.out.printf("ID: %d " ,i);
-            System.out.printf("%s",assm.print());
+            OpenAssessments.add(assm);
+            assm.print();
+            i++;
             }
-            i=i++;
+            
         }
-        System.out.println("Enter ID of assessment to close");
-        Assessment assem = Assessments.get(sc.nextInt());
+        if(OpenAssessments.isEmpty()){
+            System.out.println("\nNo Open Assessments");
+            return;
+        }
+        System.out.println("\nEnter ID of assessment to close");
+        Assessment assem = OpenAssessments.get(Integer.parseInt(sc.nextLine()));
         
         assem.close();
 
@@ -159,19 +196,30 @@ public class Course {
     }
     public void Submit_Assessment(Student student){
         System.out.println("Pending assessments ");
-        
+        ArrayList<Assessment>PendingAssessments = new ArrayList<Assessment>() ; 
+        int j=0;
         for (int i= 0 ; i<Assessments.size() ; i++){
             Assessment assm = Assessments.get(i);
-            if(student.Not_submitted(assm) ){
-                System.out.printf("ID: %d " ,i);
-                System.out.printf("%s",assm.print()); 
+            if(assm.get_Status() && student.Not_submitted(assm) ){
+                System.out.printf("ID: %d " ,j);
+                j++;
+                assm.print(); 
+                PendingAssessments.add(assm);
             }
         }
-        System.out.println("Enter ID of assessment");
-        Assessment assem = Assessments.get(sc.nextInt());
+        if(PendingAssessments.isEmpty()){
+            System.out.println("\nNone ---");
+            return;
+        }
+        System.out.println("\nEnter ID of assessment");
+        Assessment assem = PendingAssessments.get(Integer.parseInt(sc.nextLine()));
         assem.print_question();
         String ans = sc.nextLine();
-        Submission sub = new Submission( student,ans);
+        if(assem instanceof Assignment && ans.endsWith(".zip")==false){
+            System.out.println("Invalid submission for assignment, .zip format required");
+            return;
+        }
+        Submission sub = new Submission( assem ,student,ans);
         assem.add_Submission(sub);
         student.add_Submission(sub);
 
@@ -180,7 +228,9 @@ public class Course {
 
     public void View_comment(){
         for (Comment comment : Comments){
-            comment.print();}
+            comment.print();
+            System.out.println("\n");
+        }
     }
     public void Add_comment(User user){
         Comment comment = new Comment(user);

@@ -13,23 +13,35 @@ public class Assignment implements Assessment {
         System.out.println("Enter problem statement: ");
         this.problemStatement=sc.nextLine();
         System.out.println("Enter max marks: ");
-        this.MaxMarks=sc.nextInt();
-        
+        this.MaxMarks=Integer.parseInt(sc.nextLine());       
         this.Status=true;
     
     }
-    public void grade(){
-        System.out.printf("Choose ID from these ungraded submissions");
+    public void grade(Instructor instructor){
+        if(this.Submissions.isEmpty()){
+            System.out.println("No submissions to grade ");
+            return;
+        }
+        System.out.printf("Choose ID from these ungraded submissions\n");
+
         int i=0;
-        for(Submission sub : Submissions){
-            System.out.printf("%d. S%d",i,sub.getID());
+        
+        for(Submission sub : this.Submissions){
+            System.out.printf("%d. S%d \n",i,sub.getID());
             i++;
         }
-        Submission sub = Submissions.get(sc.nextInt());
-        System.out.printf("Max Marks: %d",MaxMarks  );
+
+        Submission sub = this.Submissions.get(Integer.parseInt(sc.nextLine()));
+        this.Submissions.remove(sub);
+        System.out.println("Submission: ");
+        System.out.printf("Submission: %s\n" , sub.get_Answer());
+    
+        System.out.printf("Max Marks: %d \n",this.MaxMarks  );
         System.out.println("Enter Marks scored: ");
-        sub.set_score(sc.nextInt());
-        sub.set_graded(true);      
+        sub.set_score(Integer.parseInt(sc.nextLine()));
+        sub.set_graded(true); 
+        sub.Grader(instructor.getusername());
+             
     }
     public void close(){
         this.Status=false;
@@ -38,18 +50,18 @@ public class Assignment implements Assessment {
         return this.Status;
     }
     @Override
-    public String print() {
-        // TODO Auto-generated method stub
-        return null;
+    public void print() {
+        System.out.printf("Assignment : %s Max Marks:%d\n" , this.problemStatement,this.MaxMarks);
+        
     }
     @Override
     public void print_question() {
-        // TODO Auto-generated method stub
-        System.out.println(problemStatement);
+        
+        System.out.println(this.problemStatement);
+        System.out.println("Enter filename of assignment");
     }
     @Override
     public void add_Submission(Submission sub) {
-        // TODO Auto-generated method stub
-        
+      this.Submissions.add(sub);
     }
 }
