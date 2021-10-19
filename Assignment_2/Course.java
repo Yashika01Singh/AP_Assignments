@@ -227,6 +227,9 @@ public class Course {
     }
 
     public void View_comment(){
+        if(Comments.isEmpty()){
+            System.out.println("No Comments yet");
+        }
         for (Comment comment : Comments){
             comment.print();
             System.out.println("\n");

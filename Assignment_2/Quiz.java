@@ -20,7 +20,7 @@ public class Quiz implements Assessment {
             System.out.println("No submissions to grade ");
             return;
         }
-        System.out.printf("Choose ID from these ungraded submissions");
+        System.out.printf("Choose ID from these ungraded submissions\n");
         int i=0;
         for(Submission sub : this.Submissions){
             System.out.printf("%d. S%d",i,sub.getID());
